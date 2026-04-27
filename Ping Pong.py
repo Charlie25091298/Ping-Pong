@@ -8,6 +8,7 @@ canvas.place(x=0,y=0)
 canvas.create_line(400,0,400,800,fill="White")
 canvas.create_oval(300,200,500,400,outline="White")
 scoretext = canvas.create_text(300,50, text= f"0 : 0",fill="white",font=("ariel",20,"normal"))
+win = False
 class Ball():
     def __init__(self,x0,y0,x1,y1,colour):
         self.sprite = canvas.create_oval(x0,y0,x1,y1,fill=colour)
@@ -16,6 +17,7 @@ class Ball():
         self.s1 = 0
         self.s2 = 0
     def draw(self):
+        global win
         canvas.move(self.sprite,self.x,self.y)
         pos = canvas.coords(self.sprite)
         if pos[2] > 800 :
@@ -30,13 +32,19 @@ class Ball():
             self.y = 0.2
         if pos[3] > 600 :
             self.y = -0.2
+        if self.s1 >= 10 :
+            canvas.create_text(300,100,text="Player 1 has won!",fill="white",font=("ariel",20,"normal"))
+            win = True
+        if self.s2 >= 10 :
+            canvas.create_text(300,100,text="Player 2 has won!",fill="white",font=("ariel",20,"normal"))
+            win = True
     def hit_paddle(self,p1,p2):
         p1 = canvas.coords(player1.sprite)
         p2 = canvas.coords(player2.sprite)
         pos = canvas.coords(self.sprite)
-        if pos[3] > p1[1] and pos[1] < p1[3] and pos[0] > p1[0] and pos[0] < p1[2]  :
+        if pos[3] > p1[1] and pos[1] < p1[3] and pos[0] > p1[0] and pos[0] < p1[2]:
             self.x = 0.2
-        if pos[3] > p2[1] and pos[1] < p2[3] and pos[2] > p2[0] and pos[2] < p1[2]:
+        if pos[3] > p2[1] and pos[1] < p2[3] and pos[2] > p2[0] and pos[2] < p2[2]:
             self.x = -0.2
     
 
@@ -46,16 +54,22 @@ class Player():
         self.sprite = canvas.create_rectangle(x0,y0,x1,y1,fill=colour)
         self.y = 0
     def draw(self):
+        global win
         canvas.move(self.sprite,0,self.y)
         pos = canvas.coords(self.sprite)
         if pos[1] < 0 :
             self.y = 0
         if pos[3] > 600 :
             self.y = 0
+        if win == True :
+            self.x = 0
+            self.y = 0
     def moveup(self,event):
         self.y = -0.5
     def movedown(self,event):
         self.y = 0.5
+    
+
    
 
 player1 = Player(5,5,20,100,"green")
